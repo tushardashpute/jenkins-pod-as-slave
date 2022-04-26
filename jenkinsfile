@@ -1,0 +1,39 @@
+podTemplate(label: 'mypod', containers: [
+    containerTemplate(name: 'maven', image: 'maven:3.3.9-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'sonar-scanner-newtmitch', image: 'newtmitch/sonar-scanner', command: 'cat', ttyEnabled: true)
+  ],
+  volumes: [
+  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')
+]) {
+    node('mypod') {
+        environment {
+		    registryCredential='docker-cred'
+		    registry = 'tushardashpute/springboot-k8s:latest'
+	    }
+        stage('Get a Maven project') {
+            git 'https://github.com/cloudtechmasters/springboot-maven-course-micro-svc.git'
+            container('maven') {
+                stage('Build a Maven project') {
+                    sh 'mvn -B clean install'
+                }
+            }
+            stage('Create Docker images') {
+            container('docker') {
+                    sh """
+                        docker build -t tushardashpute/springboot-k8s:latest .
+                        docker login -u tushardashpute -p *******
+                        docker push  tushardashpute/springboot-k8s:latest
+                        """
+
+                    }
+            }
+        }
+        stage('Run kubectl') {
+                container('kubectl') {
+                    sh "kubectl get pods"
+                }
+            }
+        }
+    }
