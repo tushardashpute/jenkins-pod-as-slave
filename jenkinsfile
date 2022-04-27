@@ -13,26 +13,34 @@ podTemplate(label: 'mypod', containers: [
 		    registry = 'tushardashpute/springboot-k8s:latest'
 	    }
         stage('Get a Maven project') {
-            git 'https://github.com/cloudtechmasters/springboot-maven-course-micro-svc.git'
+            git 'https://github.com/tushardashpute/springboot-maven-course-micro-svc.git'
             container('maven') {
-                stage('Build a Maven project') {
                     sh 'mvn -B clean install'
-                }
-            }
-            stage('Create Docker images') {
-            container('docker') {
-                    sh """
-                        docker build -t tushardashpute/springboot-k8s:latest .
-                        docker login -u tushardashpute -p *******
-                        docker push  tushardashpute/springboot-k8s:latest
-                        """
-
-                    }
             }
         }
-        stage('Run kubectl') {
-                container('kubectl') {
-                    sh "kubectl get pods"
+        stage("scan"){
+            container("sonar-scanner-newtmitch"){
+                withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonar-token') {
+                    sh "cd /home/jenkins/agent/workspace/jenkins-slave"
+                    sh  "pwd"
+                    sh 'sonar-scanner'
+                }
+                    
+                timeout(time: 1, unit: 'HOURS') {
+                def qg = waitForQualityGate()
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+            }  
+        }
+        stage('Create Docker images') {
+            container('docker') {
+                withCredentials([usernamePassword(credentialsId: 'docker_credentials', passwordVariable: 'password', usernameVariable: 'username')]) {
+                    sh "docker login -u ${username} -p ${password}"
+                }
+                sh "docker build -t tushardashpute/springboot-k8s:latest ."
+                sh "docker push  tushardashpute/springboot-k8s:latest"
                 }
             }
         }
