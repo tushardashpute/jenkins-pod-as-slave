@@ -155,6 +155,27 @@ In the cluster, create a Namespace and ServiceAccount which will be used by Jenk
         [root@ip-172-31-13-254 opt]# kubectl get secrets -n test jenkins-slaves-service-account-token-z5dpt -o jsonpath='{.data.token}' | base64 --decode
         eyJhbGciOiJSUzI1NiIsImtpZCI6IkV5MkdFbEtQZTMzcWw3ZGtVdjdTZmpicTBXZG1nR1k5SlMyc3JPaTlXMzgifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJ0ZXN0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImplbmtpbnMtc2xhdmVzLXNlcnZpY2UtYWNjb3VudC10b2tlbi16NWRwdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJqZW5raW5zLXNsYXZlcy1zZXJ2aWNlLWFjY291bnQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI2ZjJlNzdiMC0yOGZlLTQ1YzYtYjRiZS1mMjU4ZDcxZWI2NDciLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6dGVzdDpqZW5raW5zLXNsYXZlcy1zZXJ2aWNlLWFjY291bnQifQ.VvK-GAc3AaSMEa-iI10reH89s7PSzpay--AwTRc32Du8wU210Tfg19EiwT14eaVd-Oz3YXHC69cfbZARs_DDA0IaquEN3bGvN_a-VSTqzQtfMcpjvjZM0DimtWVVs5ohJHv1pQA4TSuzN5CfMuT5NZCLRI-ZCI1KFwjovQf4P_qtEme7h8kNsZZ9S31qPj4VGYJaiIWHpwkgMH_yFO__w_4DxvSoOw2WLlJS6bGdUd47RvD09-u_U8U0E0slo_QPaMsnhoRZaAns86npn4dm0GXMlm555n8ARK9bnFCJQ33ekZAl1rzUQAms-dGClk3IbGDuSb4CsZ6u39Ptur7HRA
 
+Now create the kubeconfig.yaml using above generated values as below:
+
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: **certificate authirity data**
+    server: **server url**
+  name: **Cluster ARN**
+contexts:
+- context:
+    cluster: **Cluster ARN**
+    user: jenkins-slaves-service-account
+    namespace: test
+  name: jenkins-slaves-service-account@bttrm-dev-1-18
+current-context: jenkins-slaves-service-account@bttrm-dev-1-18
+kind: Config
+users:
+- name: jenkins-slaves-service-account
+  user:
+    token: **Token-Value**
+
 Configure Pod as slave:
 
 
