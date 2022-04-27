@@ -176,7 +176,46 @@ Now create the kubeconfig.yaml using above generated values as below:
           user:
             token: eyJhbg...HRA
 
-Configure Pod as slave:
+
+Check if it’s working:
+
+     # kubectl -n test --kubeconfig kubeconfig.yaml auth can-i get pod
+     yes
+
+# Configure Pod as slave:
+
+Go to the Manage Nodes and Clouds > Configure Clouds:
+
+<img width="1525" alt="image" src="https://user-images.githubusercontent.com/74225291/165521528-0e2e984a-7ff8-46b9-b247-a306d3e3e9b6.png">
+
+![image](https://user-images.githubusercontent.com/74225291/165521609-3e5cd6f2-a265-45ea-b6d5-92f41b37cc8c.png)
+
+Set the URL of your cluster’s API server and a Namespace:
+
+<img width="1467" alt="image" src="https://user-images.githubusercontent.com/74225291/165521748-6e10e28b-e440-4d26-a104-1a028ab5b5ca.png">
+
+Jenkins Kubernetes Credentials
+Go back to the Jenkins, add a new Credential:
+
+<img width="1505" alt="image" src="https://user-images.githubusercontent.com/74225291/165522000-d00289e9-eeea-4242-8616-8dfc51814f39.png">
+
+![image](https://user-images.githubusercontent.com/74225291/165522104-5a81a08f-bb41-46ef-90bf-77c56e8b9c31.png)
+
+Now check the connection and give jenkins URL as well.
+
+<img width="1076" alt="image" src="https://user-images.githubusercontent.com/74225291/165522261-1b1b110f-3a5a-4ec7-aa25-9e1bc613dcdb.png">
+
+
+<img width="1135" alt="image" src="https://user-images.githubusercontent.com/74225291/165522426-16da404b-8ec0-4ad4-b10b-3829165edb61.png">
+
+
+<img width="1129" alt="image" src="https://user-images.githubusercontent.com/74225291/165522488-fa7fc07b-9c11-428b-a082-eb761ce9560c.png">
+
+
+Now create the new jenkins job pipeline job using Jenkinsfile attached.
+
+<img width="1131" alt="image" src="https://user-images.githubusercontent.com/74225291/165522654-eb7f071e-cfff-40f9-b2fe-9800cfbb1189.png">
+
 
 
 jenkins/jnlp-slave
