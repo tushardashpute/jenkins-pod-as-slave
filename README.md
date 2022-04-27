@@ -215,7 +215,3 @@ Now check the connection and give jenkins URL as well.
 Now create the new jenkins job pipeline job using Jenkinsfile attached.
 
 <img width="1131" alt="image" src="https://user-images.githubusercontent.com/74225291/165522654-eb7f071e-cfff-40f9-b2fe-9800cfbb1189.png">
-
-
-
-jenkins/jnlp-slave
