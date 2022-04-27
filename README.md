@@ -157,24 +157,24 @@ In the cluster, create a Namespace and ServiceAccount which will be used by Jenk
 
 Now create the kubeconfig.yaml using above generated values as below:
 
-apiVersion: v1
-clusters:
-- cluster:
-    certificate-authority-data: **certificate authirity data**
-    server: **server url**
-  name: **Cluster ARN**
-contexts:
-- context:
-    cluster: **Cluster ARN**
-    user: jenkins-slaves-service-account
-    namespace: test
-  name: jenkins-slaves-service-account@bttrm-dev-1-18
-current-context: jenkins-slaves-service-account@bttrm-dev-1-18
-kind: Config
-users:
-- name: jenkins-slaves-service-account
-  user:
-    token: **Token-Value**
+        apiVersion: v1
+        clusters:
+        - cluster:
+            certificate-authority-data: LS0...Cg==
+            server: https://2D2B0*****36.gr7.us-east-2.eks.amazonaws.com
+          name: arn:aws:eks:us-east-2:4624****70869:cluster/my-cluster
+        contexts:
+        - context:
+            cluster: arn:aws:eks:us-east-2:4624****70869:cluster/my-cluster
+            user: jenkins-slaves-service-account
+            namespace: test
+          name: jenkins-slaves-service-account@my-cluster
+        current-context: jenkins-slaves-service-account@my-cluster
+        kind: Config
+        users:
+        - name: jenkins-slaves-service-account
+          user:
+            token: eyJhbg...HRA
 
 Configure Pod as slave:
 
